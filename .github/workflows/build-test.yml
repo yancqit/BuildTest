@@ -1,0 +1,32 @@
+name: 编译 测试
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: 删除历史 任务
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 1
+        
+    - name: 新建文件
+      id: organize
+      run: |
+        touch test.ini
+        
+    - name: 文件上传
+      uses: kostya-ten/ssh-server-deploy@v4
+      with:
+        host: 108.174.60.154
+        port: 22
+        username: root
+        password: hKSJV2mdi836P0k4nZ
+        scp_source: test.ini
+        scp_target: /home/
